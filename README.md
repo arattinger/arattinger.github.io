@@ -1,3 +1,3 @@
 ## Projects
 
-[Co-occurrence](cooccurrence.html)
+[Co-occurrence](cooccurrence)
