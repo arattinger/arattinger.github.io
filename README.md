@@ -1,4 +1,3 @@
-# arattinger.github.io
+## Projects
 
-README
-=====
+[Co-occurrence](cooccurrence.html)
