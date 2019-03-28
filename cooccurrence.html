@@ -1,1 +1,335 @@
-Co-occurrence Matrix
+
+<!DOCTYPE html>
+<html>
+   <head>
+     <title>Co-ocurrence matrix</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <!-- <link href="http://fonts.googleapis.com/css?family=Sintony|Dancing+Script:900" rel="stylesheet" type="text/css" /> -->
+      <style>
+        .background{
+          fill: #eee;
+        }
+
+        .label {
+          font: 300 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+          fill: #2f2f2f;
+        }
+
+        div.tooltip {
+          position: absolute;
+          text-align: center;
+          width: 50px;
+          /*border-radius: 5px;*/
+          padding: 2px;
+          background: white;
+          border: 0px;
+          pointer-events: none;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+          transition: 0.3s;
+        }
+
+        text.active {
+          fill: red;
+          font-weight: bold;
+        }
+
+        line {
+          stroke: #fff;
+        }
+
+        .container {
+          display: grid;
+          width: 1000px;
+          grid-template-areas: "head head"
+                                "intro intro"
+                                "graph aside";
+          grid-template-columns: auto auto;
+          justify-items: center;
+          margin: auto;
+        }
+
+        graph {
+          grid-area: graph;
+        }
+
+        aside {
+          grid-area: aside;
+          margin: 5px;
+          margin-top: 280px;
+        }
+
+
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <graph></graph>
+
+         <aside >
+           <p>Order by: 
+            <select id="order">
+             <option value="name">A-Z</option>
+             <option value="count">Frequency</option>
+             <!-- <option value="group">Group</option> -->
+           </select>
+            <p>Class: <br>  
+            <select id="pubclass">
+              <option value="A.1.json">A.1.</option>
+              <option value="B.2.json">B.2.</option>
+              <option value="C.1.2.json">C.1.2.</option>
+              <option value="C.1.3.json">C.1.3.</option>
+              <option value="C.2.0.json">C.2.0.</option>
+              <option value="C.2.1.json">C.2.1.</option>
+              <option value="C.2.2.json">C.2.2.</option>
+              <option value="C.2.3.json">C.2.3.</option>
+              <option value="C.2.4.json">C.2.4.</option>
+              <option value="C.2.json">C.2.</option>
+              <option value="C.3.json">C.3.</option>
+              <option value="C.4.json">C.4.</option>
+              <option value="D.1.1.json">D.1.1.</option>
+              <option value="D.1.3.json">D.1.3.</option>
+              <option value="D.1.5.json">D.1.5.</option>
+              <option value="D.1.6.json">D.1.6.</option>
+              <option value="D.1.7.json">D.1.7.</option>
+              <option value="D.1.json">D.1.</option>
+              <option value="D.2.0.json">D.2.0.</option>
+              <option value="D.2.10.json">D.2.10.</option>
+              <option value="D.2.11.json">D.2.11.</option>
+              <option value="D.2.12.json">D.2.12.</option>
+              <option value="D.2.13.json">D.2.13.</option>
+              <option value="D.2.1.json">D.2.1.</option>
+              <option value="D.2.2.json">D.2.2.</option>
+              <option value="D.2.3.json">D.2.3.</option>
+              <option value="D.2.4.json">D.2.4.</option>
+              <option value="D.2.5.json">D.2.5.</option>
+              <option value="D.2.6.json">D.2.6.</option>
+              <option value="D.2.7.json">D.2.7.</option>
+              <option value="D.2.8.json">D.2.8.</option>
+              <option value="D.2.9.json">D.2.9.</option>
+              <option value="D.2.json">D.2.</option>
+              <option value="D.3.1.json">D.3.1.</option>
+              <option value="D.3.2.json">D.3.2.</option>
+              <option value="D.3.3.json">D.3.3.</option>
+              <option value="D.3.4.json">D.3.4.</option>
+              <option value="D.3.json">D.3.</option>
+              <option value="D.4.6.json">D.4.6.</option>
+              <option value="E.1.json">E.1.</option>
+              <option value="E.2.json">E.2.</option>
+              <option value="E.3.json">E.3.</option>
+              <option value="E.4.json">E.4.</option>
+              <option value="F.0.json">F.0.</option>
+              <option value="F.1.1.json">F.1.1.</option>
+              <option value="F.1.2.json">F.1.2.</option>
+              <option value="F.1.3.json">F.1.3.</option>
+              <option value="F.1.json">F.1.</option>
+              <option value="F.2.1.json">F.2.1.</option>
+              <option value="F.2.2.json">F.2.2.</option>
+              <option value="F.2.json">F.2.</option>
+              <option value="F.3.1.json">F.3.1.</option>
+              <option value="F.3.2.json">F.3.2.</option>
+              <option value="F.4.1.json">F.4.1.</option>
+              <option value="F.4.2.json">F.4.2.</option>
+              <option value="F.4.3.json">F.4.3.</option>
+              <option value="F.4.json">F.4.</option>
+              <option value="G.0.json">G.0.</option>
+              <option value="G.1.0.json">G.1.0.</option>
+              <option value="G.1.6.json">G.1.6.</option>
+              <option value="G.2.2.json">G.2.2.</option>
+              <option value="G.2.3.json">G.2.3.</option>
+              <option value="G.2.json">G.2.</option>
+              <option value="G.3.json">G.3.</option>
+              <option value="H.0.json">H.0.</option>
+              <option value="H.1.0.json">H.1.0.</option>
+              <option value="H.1.1.json">H.1.1.</option>
+              <option value="H.1.2.json">H.1.2.</option>
+              <option value="H.1.json">H.1.</option>
+              <option value="H.2.1.json">H.2.1.</option>
+              <option value="H.2.3.json">H.2.3.</option>
+              <option value="H.2.4.json">H.2.4.</option>
+              <option value="H.2.8.json">H.2.8.</option>
+              <option value="H.2.json">H.2.</option>
+              <option value="H.3.0.json">H.3.0.</option>
+              <option value="H.3.1.json">H.3.1.</option>
+              <option value="H.3.2.json">H.3.2.</option>
+              <option value="H.3.3.json">H.3.3.</option>
+              <option value="H.3.json">H.3.</option>
+              <option value="H..json">H..</option>
+           </select>
+         </aside>
+
+         <script>
+        var margin = {top: 100, right: 0, bottom: 10, left: 100},
+            width = 720,
+            height = 720;
+
+        var svg = d3.select("graph").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("rect")
+            .attr("class", "background")
+            .attr("width", width)
+            .attr("height", height);
+
+
+
+        document.getElementById('pubclass').addEventListener('change', function () {
+      
+          d3.json("coocurrences/" + this.value, function(data) {
+              
+              d3.selectAll(".row").remove();
+              d3.selectAll(".column").remove();
+
+              var matrix = [];
+              var nodes = data.nodes;
+              var total_items = nodes.length;
+
+              // Create rows for the matrix
+              nodes.forEach(function(node) {
+                  node.count = 0;
+                  matrix[node.index] = d3.range(total_items).map(item_index => {
+                      return {
+                          x: item_index,
+                          y: node.index,
+                          z: 0
+                      };
+                  });
+              });
+
+              var maxStrength = 0;
+              // Fill matrix with data from links and count how many times each item appears
+              data.links.forEach(function(link) {
+                  matrix[link.source][link.target].z += link.value;
+                  matrix[link.target][link.source].z += link.value;
+                  nodes[link.source].count += link.value;
+                  nodes[link.target].count += link.value;
+                  if (link.value > maxStrength) {
+                    maxStrength = link.value;
+                  }
+              });
+
+              var matrixScale = d3.scaleBand().range([0, width]).domain(d3.range(total_items));
+              var opacityScale = d3.scaleLinear().domain([0, maxStrength]).range([0.3, 1.0]).clamp(true);
+              var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+
+              // Draw each row (translating the y coordinate)
+              var rows = svg.selectAll(".row")
+                  .data(matrix)
+                  .enter().append("g")
+                  .attr("class", "row")
+                  .attr("transform", (d, i) => {
+                      return "translate(0," + matrixScale(i) + ")";
+                  });
+
+              var squares = rows.selectAll(".cell")
+                  .data(d => d.filter(item => item.z > 0))
+                  .enter().append("rect")
+                  .attr("class", "cell")
+                  .attr("x", d => matrixScale(d.x))
+                  .attr("width", matrixScale.bandwidth())
+                  .attr("height", matrixScale.bandwidth())
+                  .style("fill-opacity", d => opacityScale(d.z)).style("fill", d => {
+                      return nodes[d.x].group == nodes[d.y].group ? colorScale(nodes[d.x].group) : "grey";
+                  })
+                  .on("mouseover", mouseover)
+                  .on("mouseout", mouseout);
+
+              var columns = svg.selectAll(".column")
+                  .data(matrix)
+                  .enter().append("g")
+                  .attr("class", "column")
+                  .attr("transform", (d, i) => {
+                      return "translate(" + matrixScale(i) + ")rotate(-90)";
+                  });
+
+              rows.append("text")
+                  .attr("class", "label")
+                  .attr("x", -5)
+                  .attr("y", matrixScale.bandwidth() / 2)
+                  .attr("dy", ".32em")
+                  .attr("text-anchor", "end")
+                  .text((d, i) => nodes[i].name);
+
+              columns.append("text")
+                  .attr("class", "label")
+                  .attr("y", 100)
+                  .attr("y", matrixScale.bandwidth() / 2)
+                  .attr("dy", ".32em")
+                  .attr("text-anchor", "start")
+                  .text((d, i) => nodes[i].name);
+
+              // Precompute the orders.
+              var orders = {
+                  name: d3.range(total_items).sort((a, b) => {
+                      return d3.ascending(nodes[a].name, nodes[b].name);
+                  }),
+                  count: d3.range(total_items).sort((a, b) => {
+                      return nodes[b].count - nodes[a].count;
+                  }),
+                  group: d3.range(total_items).sort((a, b) => {
+                      return nodes[b].group - nodes[a].group;
+                  })
+              };
+
+              d3.select("#order").on("change", function() {
+                  changeOrder(this.value);
+              });
+
+              function changeOrder(value) {
+                  matrixScale.domain(orders[value]);
+                  var t = svg.transition().duration(2000);
+
+                  t.selectAll(".row")
+                      .delay((d, i) => matrixScale(i) * 4)
+                      .attr("transform", function(d, i) {
+                          return "translate(0," + matrixScale(i) + ")";
+                      })
+                      .selectAll(".cell")
+                      .delay(d => matrixScale(d.x) * 4)
+                      .attr("x", d => matrixScale(d.x));
+
+                  t.selectAll(".column")
+                      .delay((d, i) => matrixScale(i) * 4)
+                      .attr("transform", (d, i) => "translate(" + matrixScale(i) + ")rotate(-90)");
+              }
+
+              rows.append("line")
+                  .attr("x2", width);
+
+              columns.append("line")
+                  .attr("x1", -width);
+
+              var tooltip = d3.select("body")
+                  .append("div")
+                  .attr("class", "tooltip")
+                  .style("opacity", 0);
+
+              function mouseover(p) {
+                  d3.selectAll(".row text").classed("active", (d, i) => {
+                      return i == p.y;
+                  });
+                  d3.selectAll(".column text").classed("active", (d, i) => {
+                      return i == p.x;
+                  });
+                  tooltip.transition().duration(200).style("opacity", .9);
+                  tooltip.html(p.z)
+                      .style("left", (d3.event.pageX + 30) + "px")
+                      .style("top", (d3.event.pageY - 50) + "px");
+              }
+
+              function mouseout() {
+                  d3.selectAll("text").classed("active", false);
+                  tooltip.transition().duration(500).style("opacity", 0);
+              }
+              document.getElementById('order').selectedIndex = "0";
+          });
+        });
+        document.getElementById('pubclass').dispatchEvent(new Event('change'));
+        </script>
+      </div>
+   </body>
+</html>
