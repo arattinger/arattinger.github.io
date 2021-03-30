@@ -1,2 +1,2 @@
-{% include demo.html %}
+{% include head.html %}{% include demo.html %}
 
