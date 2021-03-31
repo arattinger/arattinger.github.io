@@ -107,7 +107,7 @@
             console.log(initialSeed)
 
             const start = performance.now();
-            const canvasValue = picassoCanvas(
+            window.canvasValue = picassoCanvas(
                 numShapes, initialSeed, params
             );
             const end = performance.now();
