@@ -77,16 +77,28 @@
             </form>
 
             <div style="text-align:center;" id="canvasgenerated"></div>
+            Hash:<div id="hash"></div>
         </div>
         <div class="col"></div>
-        Original implementation from: https://antoinevastel.com/browser%20fingerprinting/2019/03/21/picasso-canvas-fingerprinting.html
+        Original Implementation from:
+        https://antoinevastel.com/browser%20fingerprinting/2019/03/21/picasso-canvas-fingerprinting.html
     </div>
 </div>
 
 <script src="canvas.js"></script>
 
 <script>
-
+    String.prototype.hashCode = function() {
+      var hash = 0, i, chr;
+      if (this.length === 0) return hash;
+      for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+    };
+    
     document.getElementById('canvasbtn')
         .addEventListener('click', (e) => {
             e.preventDefault();
@@ -119,6 +131,8 @@
             } else {
                 document.getElementById('canvasgenerated').innerHTML = '<h2 class="alert alert-danger">An error occured</h2>';
             }
+             
+            document.getElementById("hash").innerHTML = canvasValue.hashCode();
 
         });
 
